@@ -215,3 +215,12 @@ Pour accéder depuis Firefox/Chrome Windows : éditer aussi `C:\Windows\System32
 - **403 sur nginx** : `/var/www/html` est vide (entrypoint WP pas exécuté ou KO). `docker logs wordpress`.
 - **WP ne se connecte pas à la DB** : vérifier que `WORDPRESS_DB_HOST=mariadb` (nom du service, pas `localhost`) et que les credentials matchent côté `MYSQL_*` et `WORDPRESS_DB_*`.
 - **`make` cherche `docker-compose.yml`** : ton fichier est `.yaml`. Soit renommer, soit éditer le Makefile (`docker compose` v2 accepte les deux extensions).
+
+Pourquoi exec à la fin de chaque entrypoint ? Pour remplacer le shell du script par le vrai daemon → daemon devient PID 1 → reçoit les signaux SIGTERM de docker stop proprement.
+Pourquoi un réseau bridge custom et pas le default ? Avec un bridge nommé, les conteneurs se résolvent par nom de service via le DNS interne de Docker (ex. mariadb au lieu d'IP). Le default ne fait pas ça en mode legacy.
+Pourquoi pas de port 80 ? Le sujet l'interdit. Seul 443 est exposé.
+Pourquoi bind-mount et pas volume nommé "vide" ? Le sujet impose que les données soient dans /home/<login>/data/... côté hôte, pas dans le storage Docker.
+Pourquoi le straggler restart: always ? Si mariadb crashe ou si la VM redémarre, Docker relance automatiquement. Indispensable pour la persistance.
+Comment WP atteint MariaDB ? Via le DNS interne de Docker : WORDPRESS_DB_HOST=mariadb résout vers l'IP du conteneur mariadb sur le bridge inception.
+Pourquoi pas d'image mysql:8 ou wordpress:latest ? Le sujet l'interdit : on doit construire les images soi-même à partir de Debian.
+Comment le cert TLS est-il généré ? openssl req -x509 -nodes dans l'entrypoint nginx au premier démarrage. Auto-signé donc le navigateur le rejette par défaut (normal).
