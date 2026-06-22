@@ -1,0 +1,6 @@
+srcs/.env
+**/data/
+*.log
+.DS_Store
+.idea/
+.vscode/

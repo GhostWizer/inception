@@ -64,25 +64,11 @@ MariaDB ne doit pas être exposé directement sur l'hôte.
 				└── entrypoint.sh
 ```
 
-## Ce que j'ai posé
 
-- un `docker-compose.yml` avec les 3 services centraux;
-- un `Makefile` pour lancer, arrêter et nettoyer l'infra;
-- les dossiers `conf/` et `tools/` par service;
-- une base Nginx avec TLS;
-- une base WordPress en PHP-FPM;
-- une base MariaDB avec sa config minimale.
+**rapatries ton code à chaque fois que tu travailles dessus.**
 
-## Vérification
-
-La validation Docker n'a pas pu être exécutée ici, car Docker n'est pas installé dans cet environnement.
-J'ai quand même confirmé statiquement que tous les fichiers référencés existent.
-
-## Suite logique
-
-La prochaine étape consiste à rendre chaque service réellement conforme au sujet:
-
-1. installer WordPress dans le conteneur dédié;
-2. écrire l'initialisation MariaDB;
-3. finaliser la config Nginx avec FastCGI;
-4. ajouter les scripts d'entrée robustes et idempotents.
+sudo apt update
+sudo apt install -y docker.io docker-compose-v2 make git
+sudo usermod -aG docker $USER
+# se reconnecter pour que le groupe prenne effet
+mkdir -p /home/$USER/data/wordpress /home/$USER/data/mariadb

@@ -1,22 +1,25 @@
-version: "3.8"
-
 services:
   nginx:
     build:
       context: ./requirements/nginx
+    image: nginx:inception
     container_name: nginx
     depends_on:
       - wordpress
+    env_file:
+      - .env
     ports:
       - "443:443"
     networks:
       - inception
     volumes:
       - wordpress_data:/var/www/html
+    restart: always
 
   wordpress:
     build:
       context: ./requirements/wordpress
+    image: wordpress:inception
     container_name: wordpress
     depends_on:
       - mariadb
@@ -26,10 +29,12 @@ services:
       - inception
     volumes:
       - wordpress_data:/var/www/html
+    restart: always
 
   mariadb:
     build:
       context: ./requirements/mariadb
+    image: mariadb:inception
     container_name: mariadb
     env_file:
       - .env
@@ -37,11 +42,25 @@ services:
       - inception
     volumes:
       - mariadb_data:/var/lib/mysql
+    restart: always
 
 networks:
   inception:
+    name: inception
     driver: bridge
 
 volumes:
   wordpress_data:
+    name: wordpress_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-/home/ghostwizer/data}/wordpress
   mariadb_data:
+    name: mariadb_data
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: ${DATA_PATH:-/home/ghostwizer/data}/mariadb
