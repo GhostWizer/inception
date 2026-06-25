@@ -1,5 +1,17 @@
 # Inception
 
+**ATTENTION**
+use de .gitkeep ??
+mariadb qui expose 3306 ??
+pas de dossier .secret/ comme dans le sujet reco archi ??
+use docker secret ??
+pas de .dockerignore
+readme req todo.
+pas de msg/comm en fr (same for readme)
+dev_doc/user_doc todo
+PID1 sur ?? pas else
+
+
 Mini-infrastructure Docker : Nginx (reverse proxy TLS) → WordPress (php-fpm) → MariaDB.
 
 ## Architecture

@@ -27,6 +27,7 @@ else
     ADMIN=mysqladmin
 fi
 
+
 # Sanity check env
 : "${MYSQL_ROOT_PASSWORD:?need MYSQL_ROOT_PASSWORD}"
 : "${MYSQL_DATABASE:?need MYSQL_DATABASE}"
