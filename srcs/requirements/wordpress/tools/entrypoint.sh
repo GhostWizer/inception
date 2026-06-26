@@ -36,6 +36,11 @@ if [ ! -f wp-config.php ]; then
         --role=author
 fi
 
+if wp core is-installed --allow-root >/dev/null 2>&1; then
+    wp option update home    "https://${DOMAIN_NAME}" --allow-root >/dev/null
+    wp option update siteurl "https://${DOMAIN_NAME}" --allow-root >/dev/null
+fi
+
 # php-fpm must listen on TCP 9000 (not a Unix socket) so nginx can reach it
 FPM_POOL=/etc/php/8.2/fpm/pool.d/www.conf
 sed -i 's|^listen = .*|listen = 9000|' "$FPM_POOL"
