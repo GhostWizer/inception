@@ -56,11 +56,11 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: ${DATA_PATH:-/home/ghostwizer/data}/wordpress
+      device: ${DATA_PATH:-/home/jhubier/data}/wordpress
   mariadb_data:
     name: mariadb_data
     driver: local
     driver_opts:
       type: none
       o: bind
-      device: ${DATA_PATH:-/home/ghostwizer/data}/mariadb
+      device: ${DATA_PATH:-/home/jhubier/data}/mariadb
