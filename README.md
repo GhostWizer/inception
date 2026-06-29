@@ -107,3 +107,17 @@ Documentation and articles consulted during the project:
 - Drafting and structuring this README, USER_DOC and DEV_DOC.
 
 All Dockerfiles, entrypoint logic, configuration choices, and final code were written, reviewed and tested by me. No section of the project was used "as is" from AI without understanding and adapting it.
+
+
+### help
+
+
+docker ps
+
+docker system prune -af --volumes
+wp-admin
+wp-login.php
+docker exec -it mariadb mariadb -uroot -proot_pwd
+USE wordpress;
+SHOW TABLES;
+SELECT * FROM wordpress.wp_comments\G
