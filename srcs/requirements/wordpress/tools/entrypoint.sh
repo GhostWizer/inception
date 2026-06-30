@@ -3,6 +3,14 @@ set -e
 
 cd /var/www/html
 
+# Build the public URL: omit ":port" when it is the default https port (443)
+PORT="${PUBLIC_PORT:-443}"
+if [ "$PORT" = "443" ]; then
+    PUBLIC_URL="https://${DOMAIN_NAME}"
+else
+    PUBLIC_URL="https://${DOMAIN_NAME}:${PORT}"
+fi
+
 echo "[wordpress] Waiting for mariadb..."
 until mariadb -h"${WORDPRESS_DB_HOST}" -u"${WORDPRESS_DB_USER}" -p"${WORDPRESS_DB_PASSWORD}" -e "SELECT 1" >/dev/null 2>&1; do
     sleep 2
@@ -22,7 +30,7 @@ if [ ! -f wp-config.php ]; then
 
     echo "[wordpress] Installing WordPress..."
     wp core install --allow-root \
-        --url="${DOMAIN_NAME}" \
+        --url="${PUBLIC_URL}" \
         --title="Inception" \
         --admin_user="${WP_ADMIN_USER}" \
         --admin_password="${WP_ADMIN_PASSWORD}" \
@@ -37,8 +45,8 @@ if [ ! -f wp-config.php ]; then
 fi
 
 if wp core is-installed --allow-root >/dev/null 2>&1; then
-    wp option update home    "https://${DOMAIN_NAME}" --allow-root >/dev/null
-    wp option update siteurl "https://${DOMAIN_NAME}" --allow-root >/dev/null
+    wp option update home    "${PUBLIC_URL}" --allow-root >/dev/null
+    wp option update siteurl "${PUBLIC_URL}" --allow-root >/dev/null
 fi
 
 # php-fpm must listen on TCP 9000 (not a Unix socket) so nginx can reach it

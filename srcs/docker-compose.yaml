@@ -9,7 +9,7 @@ services:
     env_file:
       - .env
     ports:
-      - "443:443"
+      - "${PUBLIC_PORT:-443}:443"
     networks:
       - inception
     volumes:

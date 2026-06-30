@@ -1,7 +1,11 @@
-NAME := inception
+NAME    := inception
 COMPOSE := docker compose -f srcs/docker-compose.yaml
+ENV     := srcs/.env
+
+DATA_PATH := $(shell [ -f $(ENV) ] && grep -E '^DATA_PATH=' $(ENV) | cut -d= -f2- || echo /home/$$USER/data)
 
 up:
+	@mkdir -p $(DATA_PATH)/wordpress $(DATA_PATH)/mariadb
 	$(COMPOSE) up -d --build
 
 down:
