@@ -49,6 +49,19 @@ if wp core is-installed --allow-root >/dev/null 2>&1; then
     wp option update siteurl "${PUBLIC_URL}" --allow-root >/dev/null
 fi
 
+# mu-plugin to prevent canonical-redirect loops on non-default ports.
+# WordPress's redirect_canonical() compares rebuilt URLs and gets confused with
+# non-443 ports behind a reverse proxy. Disabling it is safe for our use case
+# (no SEO concerns) and lets the site work on any port.
+MU_DIR=/var/www/html/wp-content/mu-plugins
+mkdir -p "$MU_DIR"
+cat > "$MU_DIR/inception-no-redirect.php" <<'PHP'
+<?php
+// Disable WordPress canonical redirects (fix loop on non-default ports).
+remove_filter('template_redirect', 'redirect_canonical');
+add_filter('redirect_canonical', '__return_false');
+PHP
+
 # php-fpm must listen on TCP 9000 (not a Unix socket) so nginx can reach it
 FPM_POOL=/etc/php/8.2/fpm/pool.d/www.conf
 sed -i 's|^listen = .*|listen = 9000|' "$FPM_POOL"

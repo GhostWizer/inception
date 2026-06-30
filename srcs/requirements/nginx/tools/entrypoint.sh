@@ -12,7 +12,7 @@ if [ ! -f /etc/ssl/certs/server.crt ] || [ ! -f /etc/ssl/private/server.key ]; t
         -subj "/C=FR/ST=Paris/L=Paris/O=42/OU=Inception/CN=${DOMAIN_NAME}"
 fi
 
-# Inject the domain name into the nginx config
-sed -i "s|DOMAIN_PLACEHOLDER|${DOMAIN_NAME}|g" /etc/nginx/nginx.conf
+PORT="${PUBLIC_PORT:-443}"
+sed -i "s|DOMAIN_PLACEHOLDER|${DOMAIN_NAME}|g; s|PORT_PLACEHOLDER|${PORT}|g" /etc/nginx/nginx.conf
 
 exec nginx -g 'daemon off;'
